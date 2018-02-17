@@ -4,7 +4,13 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+I am a Canadian undergraduate student studying statistical economics at Queen's University at Kingston.
+
+I hope to one day contribute to the development of general Artificial Intelligence.
+
+I think that for anything to be alive at all is an astounding miracle and would like to see all forms of life continue in the universe for as long as possible.
+
+[//]: # (This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
 
 You can find the source code for Minima at GitHub:
 [jekyll][jekyll-organization] /
@@ -15,4 +21,4 @@ You can find the source code for Jekyll at GitHub:
 [jekyll](https://github.com/jekyll/jekyll)
 
 
-[jekyll-organization]: https://github.com/jekyll
+[jekyll-organization]: https://github.com/jekyll)
