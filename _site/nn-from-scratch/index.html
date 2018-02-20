@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Building a Deep Neural Net from Scratch | Teghan Nightengale</title>
+<meta name="generator" content="Jekyll v3.7.2" />
+<meta property="og:title" content="Building a Deep Neural Net from Scratch" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Welcome!" />
+<meta property="og:description" content="Welcome!" />
+<link rel="canonical" href="http://localhost:4000/nn-from-scratch/" />
+<meta property="og:url" content="http://localhost:4000/nn-from-scratch/" />
+<meta property="og:site_name" content="Teghan Nightengale" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-02-19T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Welcome!","@type":"BlogPosting","url":"http://localhost:4000/nn-from-scratch/","headline":"Building a Deep Neural Net from Scratch","dateModified":"2018-02-19T00:00:00-05:00","datePublished":"2018-02-19T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/nn-from-scratch/"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Teghan Nightengale" />
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" rel="author" href="/">Teghan Nightengale</a>
+
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Building a Deep Neural Net from Scratch</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-02-19T00:00:00-05:00" itemprop="datePublished">
+        
+        Feb 19, 2018
+      </time>
+      </p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Welcome!</p>
+
+<p>In this post we will go through the proceedure of building a deep neural net from scratch using python and explore the underlying principles of neural networks in the process. The outline for this proceedure is as follows:
+<br /></p>
+<ol>
+  <li>Construct an example dataset from a sample distribution.
+<br />
+<br /></li>
+  <li>Define the necessary components of the neural network and construct the corresponding functions.
+<br />
+<br /></li>
+  <li>Assemble the functions into a neural network and train the model on the training portion of our example dataset.
+<br />
+<br /></li>
+  <li>Use the model to predict features in the hold out portion of our example dataset.</li>
+</ol>
+
+<h2 id="1-construct-a-sample-dataset">1. Construct a Sample Dataset</h2>
+
+<p>We will import the packages needed for this notebook and use the scikit-learn package to create a target shape data cluster.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_circles</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">make_circles</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="n">noise</span><span class="o">=.</span><span class="mi">3</span><span class="p">,</span><span class="n">factor</span><span class="o">=.</span><span class="mo">001</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'x2'</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;figure&gt;
+    &lt;img src="/assets/posts/2018-02-19-building-a-deep-neural-net-from-scratch/output_5_0.png"  /&gt;
+    &lt;figcaption&gt;If this works&lt;/figcaption&gt;
+&lt;/figure&gt;
+</code></pre></div></div>
+
+<p>We can see explicitly that the data points in the center of the cluster are labeled <code class="highlighter-rouge">1</code>, whereas those drawn from the encompassing fringe distribution are labled <code class="highlighter-rouge">0</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Y</span><span class="p">,(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">sort_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">))</span>
+<span class="n">data_ones</span> <span class="o">=</span> <span class="n">sort_data</span><span class="p">[</span><span class="n">sort_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">data_zeros</span> <span class="o">=</span> <span class="n">sort_data</span><span class="p">[</span><span class="n">sort_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_ones</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data_ones</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s">'gold'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_8_0.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s">'purple'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'x2'</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_9_0.png" alt="png" /></p>
+
+<p>Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let’s get started building our network.</p>
+
+<h2 id="2-define-the-components-of-the-neural-network">2. Define the Components of the Neural Network</h2>
+
+<p>In this section we will systematically lay out the components of a neural network and construct the accompanying functions necessary for our model.</p>
+
+<p><strong>If you are unfamiliar with neural networks here is a quick explanation:</strong></p>
+
+<blockquote>
+  <p>The basic process of a neural network is to input a data matrix of features and observations, into a series of layers, each with multiple nodes. At each layer a new matrix is estimated using a weight matrix and a bias vector. The nodes at each layer determine the dimensions of these weight matrices and bias vectors.</p>
+</blockquote>
+
+<blockquote>
+  <p>This process of estimating new input matrices using the weight matrices and bias vectors is repeated until the final layer outputs a vector of predictions. This prediction vector is then compared to the vector of true labels. Recall that in our data the true label is either a <code class="highlighter-rouge">1</code> or a <code class="highlighter-rouge">0</code> depending on which distribution the data was drawn from.</p>
+</blockquote>
+
+<blockquote>
+  <p>The network then slightly adjusts the weight matrices and bias vector in each layer, so that in subsequent iterations the network will output a prediction vector that more accurately predicts the true label vector. This process is repeated for many iterations until the prediction vector reaches a high enough accuracy to satisfy the researcher.</p>
+</blockquote>
+
+<p>To start let’s consider our input data in matrix form:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\mathbf{X} = \mathbf{A}^{[0]} = 
+\begin{bmatrix}
+\ a_{11}& \ldots& \ a_{1m} \\
+\vdots& \ddots& \vdots \\
+\ a_{n^{[0]}1}& \ldots& \ a_{n^{[0]}m}
+\end{bmatrix}
+\end{align} %]]></script>
+
+<p>Each layer in our neural network requires an input matrix, $\mathbf{A}^{[l]}$. We can consider our data $\mathbf{X}$ as the first input, $\mathbf{A}^{[0]}$. Notice that $\mathbf{A}^{[0]}$ has dimensions $(n^{[0]},m)$. $n^{[0]}$ indicates the number of features in the dataset that we are using to make predictions, while $m$ is the number of oberservations or data points in our sample data. In subsequent layers, $n^{[l]}$ is the number of nodes in that layer.</p>
+
+<p>At every layer $l$ we estimate a new matrix $\mathbf{Z}^{[l]}$ using the weight matrix and bias vector for that layer. The general layer matrix estimation is:</p>
+
+<script type="math/tex; mode=display">\begin{align}
+\underset{\scriptsize{(n^{[l]},m)}}{\mathbf{Z}}^{[l]} = \underset{\scriptsize{(n^{[l]},n^{[l-1]})}}{\mathbf{W}}^{[l]}\cdot \underset{\scriptsize{(n^{l-1},m)}}{\mathbf{A}}^{[l-1]} + \underset{\scriptsize{(n^{[l]},1)}}{\mathbf{b}}^{[l]}
+\end{align}</script>
+
+<p>where $n^{[l]}$ refers to the number of nodes at the $l$th layer, with the exception being $n^{[0]}$ which indicates the number of features in our dataset.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">forward_prop</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">W</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="s">'''
+    Z = W*A + b
+    '''</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">W</span><span class="p">,</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span>
+    
+    <span class="k">return</span> <span class="n">Z</span>
+</code></pre></div></div>
+
+<p>Forward propagation through each layer requires us to input the estimation matrix $\mathbf{Z}$ into an activation function $g(z)$. The form of the activation function can vary between layers, and is one of several archetypes, such as a logistic or relu function. In this way the input matrix of the subsequent layer $\mathbf{A}^{[l]}$ is calculated:</p>
+
+<script type="math/tex; mode=display">\mathbf{A}^{[l]} = g(\mathbf{Z}^{[l]})</script>
+
+<p>The most commonly used types of activation functions are relu and logistic/sigmoid activation functions. Let’s define the relu activation function:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+g(z) = \Bigg\{
+\begin{matrix}
+\ z, & if \ z \geq{0} \\
+\ 0, & if \ z  < 0
+\end{matrix} %]]></script>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">Z</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">A</span>
+</code></pre></div></div>
+
+<p>And the logistic/sigmoid activation function:</p>
+
+<script type="math/tex; mode=display">\sigma(z) = \frac{1}{1\ + e^{-z}}</script>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">Z</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">Z</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">y</span>
+</code></pre></div></div>
+
+<p>Let’s now define a function to input our data into and create the initial weight matrices and bias vectors for each layer:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">init_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">layer_list</span><span class="p">):</span>
+    <span class="s">'''
+    This function takes in a dataset, X, with dimensions
+    (n_0, m) where n_0 is the number of features of the 
+    dataset and m is the number of observations, and appends
+    n_0 to a layer_list representing the number of nodes at
+    each layer in the network. The length of the layer_list
+    is the number of layers
+    '''</span>
+    
+    <span class="k">assert</span> <span class="n">layer_list</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">layer_list</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'last element of layer_list must be 1 (node)'</span>
+    
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    
+    
+    <span class="n">n_0</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>  <span class="c"># number of features in dataset</span>
+    <span class="n">layer_list</span> <span class="o">=</span> <span class="n">n_0</span> <span class="o">+</span> <span class="n">layer_list</span> <span class="c"># add dimensions of features to layer_list</span>
+    
+    
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer_list</span><span class="p">)</span>
+    
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="s">'W'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">layer_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">layer_list</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="s">'b'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">layer_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">parameters</span>
+</code></pre></div></div>
+
+<h4 id="quick-recap">Quick Recap:</h4>
+<ul>
+  <li>The forward propagation algorithm operates by taking in an input matrix $\mathbf{A}^{[l-1]}$ and returning a new estimation matrix $\mathbf{Z}^{[l]}$.</li>
+  <li>The estimation matrix is then passsed into an activation function $g(z)$ which yields the next input matrix, $\mathbf{A}^{[l]}$.</li>
+</ul>
+
+<p>In a network with $L$ layers, the $L$th input matrix of the network is calculated as $\mathbf{A}^{[L]} = g(\mathbf{Z}^{[L]})$. In our data we are trying to predict a binary outcome: if the data point in question is from the inner or the outer distribution that we generated earlier. Therefore our output $\mathbf{Y}$ is a vector of ones and zeros with dimensions $(1,m)$. The matrix $\mathbf{A}^{[L]}$ has the same dimensions as our binary labels $\mathbf{Y}$ and contains our binary predictions for each of the observations (datapoints) in our data. The accuracy of these predictions is evaluated using a cost function. In this example we use a log-loss function. The log-loss is summed accross the $i \in {1,…,m}$ obervations:</p>
+
+<script type="math/tex; mode=display">\mathcal{L}(\mathbf{Y},\mathbf{A}^{[L]}) = -\frac{1}{m} \sum\limits_{i = 1}^{m} (y^{(i)}\log\left(a^{[L] (i)}\right) + (1-y^{(i)})\log\left(1- a^{[L (i)}\right))</script>
+
+<p>Vectorizing the cost function we have:</p>
+
+<script type="math/tex; mode=display">\mathcal{L}(\mathbf{Y},\mathbf{A}^{[L]}) = -\frac{1}{m} \left[ \
+\begin{bmatrix}
+\ y^{(1)}
+\ \dots
+\ y^{(m)}
+\end{bmatrix}
+\begin{bmatrix}
+\ log(a^{[L](1)}) \\
+\ \vdots \\
+\ log(a^{[L](m)})
+\end{bmatrix}
+-
+\begin{bmatrix}
+\ 1 - y^{(1)}
+\ \dots
+\ 1 - y^{(m)}
+\end{bmatrix}
+\begin{bmatrix}
+\ log(1 - a^{[L](1)}) \\
+\ \vdots \\
+\ log(1 - a^{[L](m)})
+\end{bmatrix}
+\
+\right]</script>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">log_loss</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">A_L</span><span class="p">):</span>
+    <span class="s">'''
+    Takes in Y vector (1, m) of labels and the
+    A_L vector (1, m) of predections for the Lth 
+    layer and calculates the log loss function.
+    '''</span>
+    
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">m</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">A_L</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">Y</span><span class="p">),(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">A_L</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)))</span>
+    
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">loss</span>
+</code></pre></div></div>
+
+<p>In pseudo code, one iteration of the forward propagation algorithm is:</p>
+
+<p><strong>for $l$ in 1 to $L$:</strong> <br /></p>
+<blockquote>
+  <p>calculate $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$ <br />
+calculate $A^{[l]} = g(Z^{[l]})$ <br /></p>
+</blockquote>
+
+<p>calculate cost function $\mathcal{L}(Y,A^{[L]})$</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">forward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">):</span>
+    <span class="s">'''
+    does a forward pass of the network and calculates
+    the cost function
+    '''</span>
+    <span class="n">Z_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">A_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">A_dict</span><span class="p">[</span><span class="s">'A0'</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span>
+        
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,(</span><span class="n">L</span><span class="p">)):</span>
+        <span class="n">Z_dict</span><span class="p">[</span><span class="s">'Z'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">forward_prop</span><span class="p">(</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">parameters</span><span class="p">[</span><span class="s">'W'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> 
+                                          <span class="n">parameters</span><span class="p">[</span><span class="s">'b'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)])</span>
+        <span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">Z_dict</span><span class="p">[</span><span class="s">'Z'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)])</span>
+        
+    <span class="n">Z_dict</span><span class="p">[</span><span class="s">'Z'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="n">forward_prop</span><span class="p">(</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">parameters</span><span class="p">[</span><span class="s">'W'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)],</span> <span class="n">parameters</span><span class="p">[</span><span class="s">'b'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)])</span>
+    <span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">Z_dict</span><span class="p">[</span><span class="s">'Z'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)])</span>
+    
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">log_loss</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)])</span>
+    
+    <span class="k">return</span> <span class="n">cost</span><span class="p">,</span> <span class="n">Z_dict</span><span class="p">,</span> <span class="n">A_dict</span>
+</code></pre></div></div>
+
+<p>Great! We have our forward propogation algorithm constructed. Now we turn to back propagation. The back propagation algorithm is used to calculate how the cost function $\mathcal{L}$ changes with respect to each of the weight matrices $\mathbf{W}$ and bias vectors $\mathbf{b}$ in the layers of our network. We need to calculate those partial derivatives and use them to adjust the values in $\mathbf{W}$ and $\mathbf{b}$. This process is called <em>gradient descent</em>, and it is designed to minimize the cost function over many iterations, to increase the accuracy of our predictions $\mathbf{A}^{[L]}$ of the true labels in our data $\mathbf{Y}$. <br /></p>
+
+<p>We use chains of partial derivatives to obtain the partials of the cost function with respect to $\mathbf{W}^{[l]}$ and $\mathbf{b}^{[l]}$ for each layer $l$. Beginning with layer $L$ we have:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[L]}} & 
+= \frac{\partial\mathcal{L}}{\partial\mathbf{A}^{[L]}}
+\cdot\frac{\partial\mathbf{A}^{[L]}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{W}^{[L]}}
+\implies
+\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[L]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{W}^{[L]}}
+\\
+\\
+\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[L]}} & 
+= \frac{\partial\mathcal{L}}{\partial\mathbf{A}^{[L]}}
+\cdot\frac{\partial\mathbf{A}^{[L]}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{b}^{[L]}}
+\ \implies
+\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[L]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{b}^{[L]}}\\
+\end{align} %]]></script>
+
+<p>Note that $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[L]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[L]}}$ have the same dimensions as $\mathbf{W}^{[L]}$ and $\mathbf{b}^{[L]}$, respectively. To calculate the how the cost function changes with respect to $\mathbf{W}$ and $\mathbf{b}$ in subsequent layers, we recursively use the partials of the cost function from the previous layer:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[L-1]}} & 
+= \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{A}^{[L-1]}}
+\cdot\frac{\partial\mathbf{A}^{[L-1]}}{\partial\mathbf{Z}^{[L-1]}}
+\cdot\frac{\partial\mathbf{Z}^{[L-1]}}{\partial\mathbf{W}^{[L-1]}}
+\implies
+\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[L-1]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L-1]}}
+\cdot\frac{\partial\mathbf{Z}^{[L-1]}}{\partial\mathbf{W}^{[L-1]}}
+\\
+\\
+\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[L-1]}} & 
+= \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L]}}
+\cdot\frac{\partial\mathbf{Z}^{[L]}}{\partial\mathbf{A}^{[L-1]}}
+\cdot\frac{\partial\mathbf{A}^{[L-1]}}{\partial\mathbf{Z}^{[L-1]}}
+\cdot\frac{\partial\mathbf{Z}^{[L-1]}}{\partial\mathbf{b}^{[L-1]}}
+\ \implies
+\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[L-1]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[L-1]}}
+\cdot\frac{\partial\mathbf{Z}^{[L-1]}}{\partial\mathbf{b}^{[L-1]}}
+\end{align} %]]></script>
+
+<p>Thus, the recursively defined partials for any $\mathbf{W}^{[l]}$ and $\mathbf{b}^{[l]}$ are:</p>
+
+<script type="math/tex; mode=display">\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[l]}}
+\cdot\frac{\partial\mathbf{Z}^{[l]}}{\partial\mathbf{W}^{[l]}}
+\\
+\\
+\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[l]}}
+\cdot\frac{\partial\mathbf{Z}^{[l]}}{\partial\mathbf{b}^{[l]}}</script>
+
+<p>Let’s define our backward propagation function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">backward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z_dict</span><span class="p">,</span><span class="n">A_dict</span><span class="p">):</span>
+    <span class="s">'''
+    Takes the parameters W and b of each layer and
+    calculates the gradient with respect to the cost 
+    function. Z and A matrices are input to calculate
+    the partials and Y is is input to obtain a value
+    for m, the number of sampes or observations in our
+    dataset.
+    '''</span>
+    
+    <span class="n">dA_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dZ_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dParam_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    
+    <span class="n">dA_dict</span><span class="p">[</span><span class="s">'dA'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">m</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span><span class="o">-</span><span class="n">Y</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)])))</span>
+    <span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="n">dA_dict</span><span class="p">[</span><span class="s">'dA'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span><span class="o">*</span><span class="p">(</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]))</span>
+    <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'dW'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)],</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'db'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">L</span><span class="p">)],</span><span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="n">L</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">dA_dict</span><span class="p">[</span><span class="s">'dA'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="s">'W'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+        
+        <span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dA_dict</span><span class="p">[</span><span class="s">'dA'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span> <span class="n">copy</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="n">Z_dict</span><span class="p">[</span><span class="s">'Z'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'dW'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span><span class="n">A_dict</span><span class="p">[</span><span class="s">'A'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        
+        <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'db'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">dZ_dict</span><span class="p">[</span><span class="s">'dZ'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)],</span><span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">dParam_dict</span>
+</code></pre></div></div>
+
+<h4 id="quick-recap-1">Quick Recap:</h4>
+<ul>
+  <li>For one loop of the forward propagation algorithm we can calculate how close our predictions $\mathbf{A}^{[L]}$ are to our actual labels in our data $\mathbf{Y}$.</li>
+  <li>We want to tune our weight matrices $\mathbf{W}$ and bias vectors $\mathbf{b}$ so that our predictions $\mathbf{A}^{[L]}$ are closer to our labels $\mathbf{Y}$. Put another way, we are trying to minimize our cost function $\mathcal{L}$.</li>
+  <li>To do this, we calculate how our cost function $\mathcal{L}$ changes with respect to each weight matrix $\mathbf{W}$ and bias vector $\mathbf{b}$ across our $L$ layers.</li>
+</ul>
+
+<p>After calculating the partials with respect to the cost function $\mathcal{L}$ for all of our $\mathbf{W}$ and $\mathbf{b}$, we need to update the values within these weight matrices and bias vectors. Remember, we are trying to find values in each $\mathbf{W}$ and $\mathbf{b}$ to minimize the cost function $\mathcal{L}$. Therefore we are descending down the slope or gradient of the cost function. The <em>learning rate</em> is a value that determines how large of a gradient step each of the values in every $\mathbf{W}$ and $\mathbf{b}$ will take. When using a constant learning rate, the trade off is between time and accuracy. Smaller learning rates will cause the process of finding the minimum of the cost function to take computationally longer. This is because for each iteration of forward and backward propagation, the values within $\mathbf{W}$ and $\mathbf{b}$ are only changing by a very small amount. Put another way, we are making very small steps down the gradient of the cost function. However a relatively larger learning rate might cause us to take too large of a step and overshoot the minimum of the cost function, actually causing the cost function to increase. This can inadverdently cause the process of descending towards the minimum to take longer.</p>
+
+<p>Let’s define a function to update the values in our $\mathbf{W}$ and $\mathbf{b}$:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">update_values</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dParam_dict</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">):</span> <span class="c">###</span>
+    <span class="s">'''
+    takes in the parameters and updates
+    '''</span>
+    
+    <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,(</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="s">'W'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'dW'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="s">'b'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">-=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">dParam_dict</span><span class="p">[</span><span class="s">'db'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+    
+    <span class="k">return</span> <span class="n">parameters</span>
+</code></pre></div></div>
+
+<p>In pseudo code, one iteration of the backward propigation algorithm is:</p>
+
+<p><strong>for $l$ in $L$ to 1:</strong> <br /></p>
+<blockquote>
+  <p>calculate $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$ <br />
+update $\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ <br />
+update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$</p>
+</blockquote>
+
+<h2 id="3-assembling-and-training-the-network">3. Assembling and Training the Network</h2>
+
+<p>We can now assemble the training function for our network. Our function will use the forward and backward propagation algorithms defined earlier to adjust the values in $\mathbf{W}$ and $\mathbf{b}$ to minimize the cost function $\mathcal{L}$.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="n">layer_list</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">learning_rate</span><span class="p">,</span><span class="n">iterations</span><span class="p">):</span>
+    <span class="s">'''
+    Builds a L layer binary classification neural network
+    where L is the len(layer_list) and each value in 
+    layer_list specifies the number of nodes at that 
+    layer. Returns the parameters W and b which minimize
+    the cost function within some error.
+    '''</span>
+    
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">init_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">layer_list</span><span class="p">)</span>
+    
+    <span class="n">cost</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># set arbitrary cost &lt; 10</span>
+    
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">iterations</span><span class="p">):</span>
+        
+        <span class="n">old_cost</span> <span class="o">=</span> <span class="n">cost</span>
+        
+        <span class="n">cost</span><span class="p">,</span> <span class="n">Z_dict</span><span class="p">,</span> <span class="n">A_dict</span><span class="p">,</span> <span class="o">=</span> <span class="n">forward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+    
+        <span class="n">dParam_dict</span> <span class="o">=</span> <span class="n">backward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z_dict</span><span class="p">,</span><span class="n">A_dict</span><span class="p">)</span>
+        
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">update_values</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dParam_dict</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">iteration</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
+            
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">500</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
+        
+        <span class="c">#if cost &gt; old_cost:</span>
+            <span class="c">#print('Stopped at iteration {}. Cost is {} and Old Cost was {}.'.format(iteration,cost,old_cost))</span>
+            <span class="c">#break</span>
+    
+    <span class="k">return</span> <span class="n">parameters</span>
+</code></pre></div></div>
+
+<p>Let’s now choose a layer structure for our model and train it on our test data:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">training_layers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Our <code class="highlighter-rouge">training_layers</code> variable indicates that our network will have 3 layers with 10 nodes in the first layer, 4 nodes in the second and a final single layer which will generate the prediction vector for each of our observations.</p>
+
+<p>Recall from earlier that in our data $\mathbf{X}$ we have 1000 datapoints. Each of these is identified by two features, let’s call them <code class="highlighter-rouge">x1</code> and <code class="highlighter-rouge">x2</code>. We now want to choose a portion of these datapoints to train our model on. We will arbitrarily choose the first 800 datapoints. This is refered to as our <code class="highlighter-rouge">training_set</code>. We also want to keep a portion of the datapoints in reserve. This prevents our model from becomming too attuned to predicting only the data that we presented it with, to the detriment of being able to predict other similiar but not identical sets of data. We will choose the remaining 200 datapoints as a holdout set. This is called our <code class="highlighter-rouge">test_set</code>. Let’s do that and check our dimensions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">training_set</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">800</span><span class="p">,]</span><span class="o">.</span><span class="n">T</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">800</span><span class="p">:</span><span class="mi">1001</span><span class="p">,]</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">y_training_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">800</span><span class="p">,],</span> <span class="p">(</span><span class="mi">800</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">y_test_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Y</span><span class="p">[</span><span class="mi">800</span><span class="p">:</span><span class="mi">1001</span><span class="p">,],</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'The training_set has dimensions {}. </span><span class="se">\n</span><span class="s">The test_set has dimensions {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_set</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">test_set</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'The y_training_set has dimensions {}. </span><span class="se">\n</span><span class="s">The y_test_set has dimensions {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_training_set</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y_test_set</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The training_set has dimensions (2, 800). 
+The test_set has dimensions (2, 200).
+The y_training_set has dimensions (1, 800). 
+The y_test_set has dimensions (1, 200).
+</code></pre></div></div>
+
+<p>Let’s now train our model using our <code class="highlighter-rouge">training_layers</code> and <code class="highlighter-rouge">training_set</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">training_y</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">10001</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
+Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
+Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
+Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
+Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
+Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
+Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
+Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
+Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
+Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
+Iteration 1500. Old cost is 0.2300418517226735. Cost is 0.230037241874553.
+Iteration 2000. Old cost is 0.22881880114984401. Cost is 0.2288287806352107.
+Iteration 2500. Old cost is 0.22767288405395014. Cost is 0.2276773379940343.
+Iteration 3000. Old cost is 0.22662889790263158. Cost is 0.22663308811353614.
+Iteration 3500. Old cost is 0.22525906433992748. Cost is 0.22519071567615911.
+Iteration 4000. Old cost is 0.22398200275732244. Cost is 0.2239717800972103.
+Iteration 4500. Old cost is 0.22309458286817688. Cost is 0.22302789047673074.
+Iteration 5000. Old cost is 0.22239993494613244. Cost is 0.22232861167266244.
+Iteration 5500. Old cost is 0.22200367990079692. Cost is 0.22206195346220475.
+Iteration 6000. Old cost is 0.222114232153429. Cost is 0.22227546141609963.
+Iteration 6500. Old cost is 0.2223303584325085. Cost is 0.22246411427875934.
+Iteration 7000. Old cost is 0.22199988415862718. Cost is 0.22202476707642788.
+Iteration 7500. Old cost is 0.22141729462599208. Cost is 0.22151332401084425.
+Iteration 8000. Old cost is 0.22084172886809803. Cost is 0.2212719305418869.
+Iteration 8500. Old cost is 0.22102923289909748. Cost is 0.22169413227221996.
+Iteration 9000. Old cost is 0.22014454571887399. Cost is 0.22056276316549212.
+Iteration 9500. Old cost is 0.21939062131688178. Cost is 0.21956614001470862.
+Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
+</code></pre></div></div>
+
+<p>We can see that even after <code class="highlighter-rouge">Iteration 500</code> the cost function has declined to <code class="highlighter-rouge">0.2367...</code>. After this point the marginal decline in the cost function from each iteration is reduced. We should be cautious about continuing with more iterations after this point as our parameters $\mathbf{W}$ and $\mathbf{b}$ may be overfitted to our <code class="highlighter-rouge">training set</code>. Let’s also generate a set of parameters based on fewer iterations and then we will be able to compare which set of parameters better predict our test set. This will indicate if perhaps our first set of parameters based on 10000 iterations was somewhat overfit to our training data.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">early_stop_predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">y_training_set</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">1001</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
+Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
+Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
+Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
+Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
+Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
+Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
+Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
+Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
+Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
+</code></pre></div></div>
+
+<h2 id="4-predicting-the-test-set">4. Predicting the Test Set</h2>
+
+<p>Let’s begin by checking out the datapoints in our test set. We want to ensure that it has a representative sample of inner points and outer points:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_set</span><span class="p">[</span><span class="mi">0</span><span class="p">,],</span><span class="n">test_set</span><span class="p">[</span><span class="mi">1</span><span class="p">,],</span><span class="n">c</span><span class="o">=</span><span class="n">y_test_set</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'x2'</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="output_61_0.png" alt="png" /></p>
+
+<p>The data looks balanced! Currently our prediction vector contains continous values. However we want to classify each of our points as either a <code class="highlighter-rouge">1</code> or a <code class="highlighter-rouge">0</code>. Let’s quickly define a function to sort our continuous prediction values to either <code class="highlighter-rouge">1</code> or <code class="highlighter-rouge">0</code> based on if it is above or below <code class="highlighter-rouge">0.5</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+    <span class="s">'''
+    Takes in a set of continuous predictions and
+    the actual lables of the data and returns a
+    prediction accuracy
+    '''</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&lt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">predictions</span><span class="p">[</span><span class="n">predictions</span> <span class="o">&gt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">labels</span><span class="p">)</span><span class="o">/</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">accuracy</span>
+</code></pre></div></div>
+
+<p>We can check if the early stop parameters yield a more accurate prediction on our test data:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reg_cost</span> <span class="o">=</span> <span class="n">forward_pass</span><span class="p">(</span><span class="n">predict_parameters</span><span class="p">,</span><span class="n">test_set</span><span class="p">,</span><span class="n">y_test_set</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'The regular model has a cost value of {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">reg_cost</span><span class="p">[</span><span class="mi">0</span><span class="p">],(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span>
+      <span class="s">'and an accuracy ratio of {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">reg_cost</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s">'A3'</span><span class="p">],</span><span class="n">y_test_set</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The regular model has a cost value of 0.2847705696329388 and an accuracy ratio of 0.875.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">early_cost</span> <span class="o">=</span> <span class="n">forward_pass</span><span class="p">(</span><span class="n">early_stop_predict_parameters</span><span class="p">,</span><span class="n">test_set</span><span class="p">,</span><span class="n">y_test_set</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'The early stop model has a cost value of {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">early_cost</span><span class="p">[</span><span class="mi">0</span><span class="p">],(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span>
+      <span class="s">'and an accuracy ratio of {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">early_cost</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s">'A3'</span><span class="p">],</span><span class="n">y_test_set</span><span class="p">)))</span>
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The early stop model has a cost value of 0.25496517602411756 and an accuracy ratio of 0.875.
+</code></pre></div></div>
+
+<p>We can see that our early stop parameters yielded a lower cost function value when applied to our holdout test data, but since we are classifying our continuous prediction outputs as either <code class="highlighter-rouge">0</code> or <code class="highlighter-rouge">1</code> it makes little difference as both sets of parameters yield the same model accuracy. It does suggest that for this dataset and this type of model, the accuracy is essentially capped at 87.5%. Any further training iterations would likely overfit the model to the training data.</p>
+
+<p>Thanks for reading!</p>
+
+  </div>
+
+  
+
+  <a class="u-url" href="/nn-from-scratch/" hidden></a>
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Teghan Nightengale</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">
+            
+              Teghan Nightengale
+            
+            </li>
+            
+            <li><a class="u-email" href="mailto:tnightengale.blog@gmail.com">tnightengale.blog@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+  
+  
+  
+  <li><a href="https://github.com/tnightengale"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">tnightengale</span></a></li>
+  
+  <li><a href="https://www.linkedin.com/in/tnightengale"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">tnightengale</span></a></li>
+  
+  
+  
+  
+  
+</ul>
+
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>A personal blog dedicated to better understanding the world through data.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
