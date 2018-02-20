@@ -46,7 +46,7 @@ plt.show()
 ```
 
 
-{% include image name="output_5_0.png" caption="If this works" %}
+![png](output_5_0.png)
 
 
 We can see explicitly that the data points in the center of the cluster are labeled `1`, whereas those drawn from the encompassing fringe distribution are labled `0`:
