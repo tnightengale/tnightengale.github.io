@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Begin Jekyll SEO tag v2.4.0 -->
-<title>Building a Deep Neural Net from Scratch | Teghan Nightengale</title>
+<title>Building a Neural Network from Scratch | Teghan Nightengale</title>
 <meta name="generator" content="Jekyll v3.7.2" />
-<meta property="og:title" content="Building a Deep Neural Net from Scratch" />
+<meta property="og:title" content="Building a Neural Network from Scratch" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Welcome!" />
 <meta property="og:description" content="Welcome!" />
@@ -18,7 +18,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-02-19T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Welcome!","@type":"BlogPosting","url":"http://localhost:4000/nn-from-scratch/","headline":"Building a Deep Neural Net from Scratch","dateModified":"2018-02-19T00:00:00-05:00","datePublished":"2018-02-19T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/nn-from-scratch/"},"@context":"http://schema.org"}</script>
+{"description":"Welcome!","@type":"BlogPosting","url":"http://localhost:4000/nn-from-scratch/","headline":"Building a Neural Network from Scratch","dateModified":"2018-02-19T00:00:00-05:00","datePublished":"2018-02-19T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/nn-from-scratch/"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   <link rel="stylesheet" href="/assets/main.css">
@@ -80,7 +80,7 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Building a Deep Neural Net from Scratch</h1>
+    <h1 class="post-title p-name" itemprop="name headline">Building a Neural Network from Scratch</h1>
     <p class="post-meta">
       <time class="dt-published" datetime="2018-02-19T00:00:00-05:00" itemprop="datePublished">
         
@@ -145,7 +145,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="/assets/output_8_0.png" alt="Fig 2" /></p>
+<p><img src="/assets/output_8_0.png" alt="Fig 1" /></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s">'purple'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
@@ -154,7 +154,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="/assets/output_9_0.png" alt="Fig 3" /></p>
+<p><img src="/assets/output_9_0.png" alt="Fig 1" /></p>
 
 <p>Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let’s get started building our network.</p>
 
@@ -193,7 +193,7 @@
 <p>At every layer $l$ we estimate a new matrix $\mathbf{Z}^{[l]}$ using the weight matrix and bias vector for that layer. The general layer matrix estimation is:</p>
 
 <script type="math/tex; mode=display">\begin{align}
-\underset{\scriptsize{(n^{[l]},m)}}{\mathbf{Z}}^{[l]} = \underset{\scriptsize{(n^{[l]},n^{[l-1]})}}{\mathbf{W}}^{[l]}\cdot \underset{\scriptsize{(n^{l-1},m)}}{\mathbf{A}}^{[l-1]} + \underset{\scriptsize{(n^{[l]},1)}}{\mathbf{b}}^{[l]}
+\underset{\small{(n^{[l]},m)}}{\mathbf{Z}}^{[l]} = \underset{\small{(n^{[l]},n^{[l-1]})}}{\mathbf{W}}^{[l]}\cdot \underset{\small{(n^{l-1},m)}}{\mathbf{A}}^{[l-1]} + \underset{\small{(n^{[l]},1)}}{\mathbf{b}}^{[l]}
 \end{align}</script>
 
 <p>where $n^{[l]}$ refers to the number of nodes at the $l$th layer, with the exception being $n^{[0]}$ which indicates the number of features in our dataset.</p>
@@ -321,13 +321,17 @@ g(z) = \Bigg\{
 
 <p>In pseudo code, one iteration of the forward propagation algorithm is:</p>
 
-<p><strong>for $l$ in 1 to $L$:</strong> <br /></p>
 <blockquote>
-  <p>calculate $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$ <br />
+  <p><strong>for $l$ in 1 to $L$:</strong> <br /></p>
+  <blockquote>
+    <p>calculate $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$ <br />
 calculate $A^{[l]} = g(Z^{[l]})$ <br /></p>
+  </blockquote>
 </blockquote>
 
-<p>calculate cost function $\mathcal{L}(Y,A^{[L]})$</p>
+<blockquote>
+  <p>calculate cost function $\mathcal{L}(Y,A^{[L]})$</p>
+</blockquote>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">forward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">):</span>
     <span class="s">'''
@@ -475,11 +479,13 @@ calculate $A^{[l]} = g(Z^{[l]})$ <br /></p>
 
 <p>In pseudo code, one iteration of the backward propigation algorithm is:</p>
 
-<p><strong>for $l$ in $L$ to 1:</strong> <br /></p>
 <blockquote>
-  <p>calculate $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$ <br />
+  <p><strong>for $l$ in $L$ to 1:</strong> <br /></p>
+  <blockquote>
+    <p>calculate $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$ <br />
 update $\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ <br />
 update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$</p>
+  </blockquote>
 </blockquote>
 
 <h2 id="3-assembling-and-training-the-network">3. Assembling and Training the Network</h2>
@@ -508,16 +514,9 @@ update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\
         <span class="n">dParam_dict</span> <span class="o">=</span> <span class="n">backward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z_dict</span><span class="p">,</span><span class="n">A_dict</span><span class="p">)</span>
         
         <span class="n">parameters</span> <span class="o">=</span> <span class="n">update_values</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dParam_dict</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">iteration</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
             
-        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">500</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">):</span>
             <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
-        
-        <span class="c">#if cost &gt; old_cost:</span>
-            <span class="c">#print('Stopped at iteration {}. Cost is {} and Old Cost was {}.'.format(iteration,cost,old_cost))</span>
-            <span class="c">#break</span>
     
     <span class="k">return</span> <span class="n">parameters</span>
 </code></pre></div></div>
@@ -553,34 +552,15 @@ The y_test_set has dimensions (1, 200).
 <span class="n">predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">training_y</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">10001</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
-Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
-Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
-Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
-Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
-Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
-Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
-Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
-Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
-Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
-Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
-Iteration 1500. Old cost is 0.2300418517226735. Cost is 0.230037241874553.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 Iteration 2000. Old cost is 0.22881880114984401. Cost is 0.2288287806352107.
-Iteration 2500. Old cost is 0.22767288405395014. Cost is 0.2276773379940343.
 Iteration 3000. Old cost is 0.22662889790263158. Cost is 0.22663308811353614.
-Iteration 3500. Old cost is 0.22525906433992748. Cost is 0.22519071567615911.
 Iteration 4000. Old cost is 0.22398200275732244. Cost is 0.2239717800972103.
-Iteration 4500. Old cost is 0.22309458286817688. Cost is 0.22302789047673074.
 Iteration 5000. Old cost is 0.22239993494613244. Cost is 0.22232861167266244.
-Iteration 5500. Old cost is 0.22200367990079692. Cost is 0.22206195346220475.
 Iteration 6000. Old cost is 0.222114232153429. Cost is 0.22227546141609963.
-Iteration 6500. Old cost is 0.2223303584325085. Cost is 0.22246411427875934.
 Iteration 7000. Old cost is 0.22199988415862718. Cost is 0.22202476707642788.
-Iteration 7500. Old cost is 0.22141729462599208. Cost is 0.22151332401084425.
 Iteration 8000. Old cost is 0.22084172886809803. Cost is 0.2212719305418869.
-Iteration 8500. Old cost is 0.22102923289909748. Cost is 0.22169413227221996.
 Iteration 9000. Old cost is 0.22014454571887399. Cost is 0.22056276316549212.
-Iteration 9500. Old cost is 0.21939062131688178. Cost is 0.21956614001470862.
 Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 </code></pre></div></div>
 
@@ -590,17 +570,7 @@ Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 <span class="n">early_stop_predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">y_training_set</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">1001</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
-Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
-Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
-Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
-Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
-Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
-Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
-Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
-Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
-Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
-Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 </code></pre></div></div>
 
 <h2 id="4-predicting-the-test-set">4. Predicting the Test Set</h2>
@@ -613,7 +583,7 @@ Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="output_61_0.png" alt="png" /></p>
+<p><img src="/assets/output_61_0.png" alt="Fig 1" /></p>
 
 <p>The data looks balanced! Currently our prediction vector contains continous values. However we want to classify each of our points as either a <code class="highlighter-rouge">1</code> or a <code class="highlighter-rouge">0</code>. Let’s quickly define a function to sort our continuous prediction values to either <code class="highlighter-rouge">1</code> or <code class="highlighter-rouge">0</code> based on if it is above or below <code class="highlighter-rouge">0.5</code>:</p>
 

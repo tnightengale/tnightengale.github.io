@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Building a Deep Neural Net from Scratch
+title: Building a Neural Network from Scratch
 permalink: /nn-from-scratch/
 ---
 Welcome!
@@ -69,7 +69,7 @@ plt.show()
 ```
 
 
-![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
 
 
 
@@ -82,7 +82,7 @@ plt.show()
 ```
 
 
-![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
 
 
 Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let's get started building our network.
@@ -118,7 +118,7 @@ At every layer $l$ we estimate a new matrix $\mathbf{Z}^{[l]}$ using the weight 
 
 $$
 \begin{align}
-\underset{\scriptsize{(n^{[l]},m)}}{\mathbf{Z}}^{[l]} = \underset{\scriptsize{(n^{[l]},n^{[l-1]})}}{\mathbf{W}}^{[l]}\cdot \underset{\scriptsize{(n^{l-1},m)}}{\mathbf{A}}^{[l-1]} + \underset{\scriptsize{(n^{[l]},1)}}{\mathbf{b}}^{[l]}
+\underset{\small{(n^{[l]},m)}}{\mathbf{Z}}^{[l]} = \underset{\small{(n^{[l]},n^{[l-1]})}}{\mathbf{W}}^{[l]}\cdot \underset{\small{(n^{l-1},m)}}{\mathbf{A}}^{[l-1]} + \underset{\small{(n^{[l]},1)}}{\mathbf{b}}^{[l]}
 \end{align}
 $$
 
@@ -264,11 +264,11 @@ def log_loss(Y, A_L):
 
 In pseudo code, one iteration of the forward propagation algorithm is:
 
-__for $l$ in 1 to $L$:__ <br>
->calculate $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$ <br/>
+>__for $l$ in 1 to $L$:__ <br>
+>>calculate $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$ <br/>
 calculate $A^{[l]} = g(Z^{[l]})$ <br>
 
-calculate cost function $\mathcal{L}(Y,A^{[L]})$
+>calculate cost function $\mathcal{L}(Y,A^{[L]})$
     
 
 
@@ -426,8 +426,8 @@ def update_values(parameters, dParam_dict, learning_rate): ###
 
 In pseudo code, one iteration of the backward propigation algorithm is:
 
-__for $l$ in $L$ to 1:__ <br>
->calculate $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$ <br/>
+>__for $l$ in $L$ to 1:__ <br>
+>>calculate $\frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ and $\frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$ <br/>
 update $\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{W}^{[l]}}$ <br>
 update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}$
 
@@ -459,16 +459,9 @@ def train_model(layer_list,X,Y,learning_rate,iterations):
         dParam_dict = backward_pass(parameters,Y,Z_dict,A_dict)
         
         parameters = update_values(parameters, dParam_dict, learning_rate)
-        
-        if iteration < 10:
-            print('Iteration {}. Old cost is {}. Cost is {}.'.format(iteration,old_cost,cost))
             
-        if(not iteration % 500):
+        if(not iteration % 1000):
             print('Iteration {}. Old cost is {}. Cost is {}.'.format(iteration,old_cost,cost))
-        
-        #if cost > old_cost:
-            #print('Stopped at iteration {}. Cost is {} and Old Cost was {}.'.format(iteration,cost,old_cost))
-            #break
     
     return parameters
 ```
@@ -510,34 +503,15 @@ np.random.seed(1)
 predict_parameters = train_model(training_layers,training_set,training_y,learning_rate = 0.0005, iterations = 10001)
 ```
 
-    Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
-    Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
-    Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
-    Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
-    Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
-    Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
-    Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
-    Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
-    Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
-    Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
     Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
-    Iteration 1500. Old cost is 0.2300418517226735. Cost is 0.230037241874553.
     Iteration 2000. Old cost is 0.22881880114984401. Cost is 0.2288287806352107.
-    Iteration 2500. Old cost is 0.22767288405395014. Cost is 0.2276773379940343.
     Iteration 3000. Old cost is 0.22662889790263158. Cost is 0.22663308811353614.
-    Iteration 3500. Old cost is 0.22525906433992748. Cost is 0.22519071567615911.
     Iteration 4000. Old cost is 0.22398200275732244. Cost is 0.2239717800972103.
-    Iteration 4500. Old cost is 0.22309458286817688. Cost is 0.22302789047673074.
     Iteration 5000. Old cost is 0.22239993494613244. Cost is 0.22232861167266244.
-    Iteration 5500. Old cost is 0.22200367990079692. Cost is 0.22206195346220475.
     Iteration 6000. Old cost is 0.222114232153429. Cost is 0.22227546141609963.
-    Iteration 6500. Old cost is 0.2223303584325085. Cost is 0.22246411427875934.
     Iteration 7000. Old cost is 0.22199988415862718. Cost is 0.22202476707642788.
-    Iteration 7500. Old cost is 0.22141729462599208. Cost is 0.22151332401084425.
     Iteration 8000. Old cost is 0.22084172886809803. Cost is 0.2212719305418869.
-    Iteration 8500. Old cost is 0.22102923289909748. Cost is 0.22169413227221996.
     Iteration 9000. Old cost is 0.22014454571887399. Cost is 0.22056276316549212.
-    Iteration 9500. Old cost is 0.21939062131688178. Cost is 0.21956614001470862.
     Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 
 
@@ -549,16 +523,6 @@ np.random.seed(1)
 early_stop_predict_parameters = train_model(training_layers,training_set,y_training_set,learning_rate = 0.0005, iterations = 1001)
 ```
 
-    Iteration 1. Old cost is 10. Cost is 0.7915907142286972.
-    Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
-    Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
-    Iteration 4. Old cost is 0.6985418397541265. Cost is 0.6792375865449989.
-    Iteration 5. Old cost is 0.6792375865449989. Cost is 0.6654585177283836.
-    Iteration 6. Old cost is 0.6654585177283836. Cost is 0.6544499466287047.
-    Iteration 7. Old cost is 0.6544499466287047. Cost is 0.6450121341855315.
-    Iteration 8. Old cost is 0.6450121341855315. Cost is 0.6365681430408292.
-    Iteration 9. Old cost is 0.6365681430408292. Cost is 0.6287305097869109.
-    Iteration 500. Old cost is 0.23675314063159722. Cost is 0.23674114576126443.
     Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 
 
@@ -575,7 +539,7 @@ plt.show()
 ```
 
 
-![png](output_61_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_61_0.png}}/assets/output_61_0.png)
 
 
 The data looks balanced! Currently our prediction vector contains continous values. However we want to classify each of our points as either a `1` or a `0`. Let's quickly define a function to sort our continuous prediction values to either `1` or `0` based on if it is above or below `0.5`:
