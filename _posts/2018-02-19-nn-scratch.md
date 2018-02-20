@@ -46,7 +46,7 @@ plt.show()
 ```
 
 
-![png](output_5_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_5_0.png}}/assets/output_5_0.png)
 
 
 We can see explicitly that the data points in the center of the cluster are labeled `1`, whereas those drawn from the encompassing fringe distribution are labled `0`:
@@ -69,7 +69,7 @@ plt.show()
 ```
 
 
-![png](output_8_0.png)
+![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
 
 
 
@@ -82,7 +82,7 @@ plt.show()
 ```
 
 
-![png](output_9_0.png)
+![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
 
 
 Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let's get started building our network.
