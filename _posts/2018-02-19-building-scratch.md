@@ -63,13 +63,14 @@ data_zeros = sort_data[sort_data[:,2] == 0]
 ```python
 plt.scatter(data_ones[:,0],data_ones[:,1],c='gold')
 plt.xlabel('x1',fontsize = 15)
+plt.ylabel('x2',fontsize = 15)
 plt.xlim((-1.5,2))
 plt.ylim((-1.5,1.5))
 plt.show()
 ```
 
 
-![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
+![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
 
 
 
@@ -82,7 +83,7 @@ plt.show()
 ```
 
 
-![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
+![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
 
 
 Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let's get started building our network.
@@ -358,7 +359,7 @@ $$
 \cdot\frac{\partial\mathbf{Z}^{[l]}}{\partial\mathbf{b}^{[l]}}
 $$
 
-Let's define our backward propagation function:
+Calculating these partials can be pretty tricky; in a future post I will show how I derived the derrivative equations used in the backward propagation algorithm below:
 
 
 ```python
@@ -448,7 +449,7 @@ def train_model(layer_list,X,Y,learning_rate,iterations):
     
     parameters = init_parameters(X, layer_list)
     
-    cost = 10 # set arbitrary cost < 10
+    cost = 1 # set arbitrary cost =< 1
     
     for iteration in range(1,iterations):
         
@@ -459,6 +460,9 @@ def train_model(layer_list,X,Y,learning_rate,iterations):
         dParam_dict = backward_pass(parameters,Y,Z_dict,A_dict)
         
         parameters = update_values(parameters, dParam_dict, learning_rate)
+        
+        if iteration in [1,2,3]:
+            print('Iteration {}. Old cost is {}. Cost is {}.'.format(iteration,old_cost,cost))
             
         if(not iteration % 1000):
             print('Iteration {}. Old cost is {}. Cost is {}.'.format(iteration,old_cost,cost))
@@ -500,9 +504,12 @@ Let's now train our model using our `training_layers` and `training_set`:
 
 ```python
 np.random.seed(1)
-predict_parameters = train_model(training_layers,training_set,training_y,learning_rate = 0.0005, iterations = 10001)
+predict_parameters = train_model(training_layers,training_set,y_training_set,learning_rate = 0.0005, iterations = 10001)
 ```
 
+    Iteration 1. Old cost is 1. Cost is 0.7915907142286972.
+    Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+    Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
     Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
     Iteration 2000. Old cost is 0.22881880114984401. Cost is 0.2288287806352107.
     Iteration 3000. Old cost is 0.22662889790263158. Cost is 0.22663308811353614.
@@ -515,7 +522,7 @@ predict_parameters = train_model(training_layers,training_set,training_y,learnin
     Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 
 
-We can see that even after `Iteration 500` the cost function has declined to `0.2367...`. After this point the marginal decline in the cost function from each iteration is reduced. We should be cautious about continuing with more iterations after this point as our parameters $\mathbf{W}$ and $\mathbf{b}$ may be overfitted to our `training set`. Let's also generate a set of parameters based on fewer iterations and then we will be able to compare which set of parameters better predict our test set. This will indicate if perhaps our first set of parameters based on 10000 iterations was somewhat overfit to our training data.
+We can see that even after `Iteration 1000` the cost function has declined to `0.2314...`. After this point the marginal decline in the cost function from each iteration is reduced. We should be cautious about continuing with more iterations after this point as our parameters $\mathbf{W}$ and $\mathbf{b}$ may be overfitted to our `training set`. Let's also generate a set of parameters based on fewer iterations and then we will be able to compare which set of parameters better predict our test set. This will indicate if perhaps our first set of parameters based on 10000 iterations was somewhat overfit to our training data.
 
 
 ```python
@@ -523,6 +530,9 @@ np.random.seed(1)
 early_stop_predict_parameters = train_model(training_layers,training_set,y_training_set,learning_rate = 0.0005, iterations = 1001)
 ```
 
+    Iteration 1. Old cost is 1. Cost is 0.7915907142286972.
+    Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+    Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
     Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 
 
@@ -584,6 +594,15 @@ print('The early stop model has a cost value of {}'.format(np.reshape(early_cost
     The early stop model has a cost value of 0.25496517602411756 and an accuracy ratio of 0.875.
 
 
-We can see that our early stop parameters yielded a lower cost function value when applied to our holdout test data, but since we are classifying our continuous prediction outputs as either `0` or `1` it makes little difference as both sets of parameters yield the same model accuracy. It does suggest that for this dataset and this type of model, the accuracy is essentially capped at 87.5%. Any further training iterations would likely overfit the model to the training data.
+We can see that our early stop parameters yielded a lower cost function value when applied to our holdout test data, but since we are classifying our continuous prediction outputs as either `0` or `1` it makes little difference as both sets of parameters yield the same model accuracy. Any further training iterations would likely overfit the model to the training data. Variables such as the number of layer and nodes, the `learning_rate`, and the number of iterations are referred to as *hyperparameters*. Our result suggests that for this dataset and these hyperparameters, the accuracy is essentially capped at 87.5%. However it's certainly possible to tune hyperparameters to yield better predictive models. In a future post I will delve into how we can systematically optimize these hyperparameters.
+
+## 5. Conclusion
+
+Let's recap what we learned:
+1. A deep neural network can be a good tool to predict labels in non-linear data.
+2. The network uses the forward and backward propagation algorithms to adjust the weight matrices and bias vectors at each layer of the network.
+3. As the weights and biases are tuned, the cost function approaches a minimum.
+4. If the model is trained on a given set of data for too many iterations, it can become very good at predicting the labels of the data it was trained on, to the detriment of predicting other samples of holdout or test data. This issue is called *overfitting*.
+5. An *early stop* of fewer iterations might yield a model with better predictive accuracy for other holdout or test data.
 
 Thanks for reading!
