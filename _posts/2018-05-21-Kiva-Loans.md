@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using Global Satellite Data To Predict Average District-Level Expenditures in Ghana"
+title: "Using Global Satellite Data to Predict Consumption in Ghana"
 permalink: /satellite-ghana/
 ---
 
@@ -161,6 +161,8 @@ constant over time.
 Below are the results of an OLS estimation of regional MPI on regional
 average monthly household expenditure.
 
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-05-21/fig1.png}}/assets/2018-05-21/fig1.png)
+
 ![](Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 <table style="text-align:center">
@@ -297,6 +299,8 @@ F Statistic
 The OLS estimation shows regional average monthly household expenditure
 to be a poor approximation for regional MPI. So I turn to the
 alternative measure of average per capita expenditure.
+
+![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-05-21/fig2.png}}/assets/2018-05-21/fig2.png)
 
 ![](Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
@@ -2669,6 +2673,7 @@ Below is a visualisation of the OLS model presented above.
       ggtitle('MPI on log Predicted Per-Capita Consumption') +
       guides(colour=guide_legend(title='MPI'))
 
+![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-05-21/fig3.png}}/assets/2018-05-21/fig3.png)
 ![](Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-27-1.png)
 
     detach(test)

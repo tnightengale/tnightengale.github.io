@@ -46,7 +46,7 @@ plt.show()
 ```
 
 
-![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_5_0.png}}/assets/2018-02-19/output_5_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-02-19/output_5_0.png}}/assets/2018-02-19/output_5_0.png)
 
 
 We can see explicitly that the data points in the center of the cluster are labeled `1`, whereas those drawn from the encompassing fringe distribution are labled `0`:
@@ -70,7 +70,7 @@ plt.show()
 ```
 
 
-![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_8_0.png}}/assets/output_8_0.png)
+![Fig 2]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-02-19/output_8_0.png}}/assets/2018-02-19/output_8_0.png)
 
 
 
@@ -83,7 +83,7 @@ plt.show()
 ```
 
 
-![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_9_0.png}}/assets/output_9_0.png)
+![Fig 3]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-02-19/output_9_0.png}}/assets/2018-02-19/output_9_0.png)
 
 
 Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let's get started building our network.
@@ -549,7 +549,7 @@ plt.show()
 ```
 
 
-![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_61_0.png}}/assets/output_61_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/2018-02-19/output_61_0.png}}/assets/2018-02-19/output_61_0.png)
 
 
 The data looks balanced! Currently our prediction vector contains continous values. However we want to classify each of our points as either a `1` or a `0`. Let's quickly define a function to sort our continuous prediction values to either `1` or `0` based on if it is above or below `0.5`:

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-21T16:05:52-04:00</updated><id>http://localhost:4000/</id><title type="html">Teghan Nightengale</title><subtitle>A personal blog dedicated to better understanding the world through data.</subtitle><entry><title type="html">Using Global Satellite Data To Predict Average District-Level Expenditures in Ghana</title><link href="http://localhost:4000/satellite-ghana/" rel="alternate" type="text/html" title="Using Global Satellite Data To Predict Average District-Level Expenditures in Ghana" /><published>2018-05-21T00:00:00-04:00</published><updated>2018-05-21T00:00:00-04:00</updated><id>http://localhost:4000/Kiva-Loans</id><content type="html" xml:base="http://localhost:4000/satellite-ghana/">&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-05-21T16:25:40-04:00</updated><id>http://localhost:4000/</id><title type="html">Teghan Nightengale</title><subtitle>A personal blog dedicated to better understanding the world through data.</subtitle><entry><title type="html">Using Global Satellite Data to Predict Consumption in Ghana</title><link href="http://localhost:4000/satellite-ghana/" rel="alternate" type="text/html" title="Using Global Satellite Data to Predict Consumption in Ghana" /><published>2018-05-21T00:00:00-04:00</published><updated>2018-05-21T00:00:00-04:00</updated><id>http://localhost:4000/Kiva-Loans</id><content type="html" xml:base="http://localhost:4000/satellite-ghana/">&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 rm(list=ls())
 list.of.packages = c('knitr','broom','boot','ggplot2','magrittr','kableExtra','papeR','stargazer')
 new.packages = list.of.packages[!(list.of.packages %in% installed.packages()[,&quot;Package&quot;])]
@@ -161,6 +161,8 @@ constant over time.&lt;/p&gt;
 &lt;p&gt;Below are the results of an OLS estimation of regional MPI on regional
 average monthly household expenditure.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/assets/2018-05-21/fig1.png&quot; alt=&quot;Fig 1&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;img src=&quot;Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-4-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;table style=&quot;text-align:center&quot;&gt;
@@ -297,6 +299,8 @@ F Statistic
 &lt;p&gt;The OLS estimation shows regional average monthly household expenditure
 to be a poor approximation for regional MPI. So I turn to the
 alternative measure of average per capita expenditure.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2018-05-21/fig2.png&quot; alt=&quot;Fig 2&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-6-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
@@ -2683,7 +2687,8 @@ ggplot(test, aes(avg_per_cap_expend,MPI, colour = 'True MPI')) + geom_point() +
   guides(colour=guide_legend(title='MPI'))
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-27-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2018-05-21/fig3.png&quot; alt=&quot;Fig 3&quot; /&gt;
+&lt;img src=&quot;Kiva_Loans_files/figure-markdown_strict/unnamed-chunk-27-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;detach(test)
 
@@ -2930,7 +2935,7 @@ and Precipitation: Monthly and Annual Time Series (1950 - 1999),
 &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/output_8_0.png&quot; alt=&quot;Fig 2&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2018-02-19/output_8_0.png&quot; alt=&quot;Fig 2&quot; /&gt;&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data_zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'purple'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xlabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'x1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fontsize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -2939,7 +2944,7 @@ and Precipitation: Monthly and Annual Time Series (1950 - 1999),
 &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/output_9_0.png&quot; alt=&quot;Fig 3&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2018-02-19/output_9_0.png&quot; alt=&quot;Fig 3&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let’s get started building our network.&lt;/p&gt;
 
@@ -3377,7 +3382,7 @@ Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/output_61_0.png&quot; alt=&quot;Fig 1&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/2018-02-19/output_61_0.png&quot; alt=&quot;Fig 1&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The data looks balanced! Currently our prediction vector contains continous values. However we want to classify each of our points as either a &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; or a &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;. Let’s quickly define a function to sort our continuous prediction values to either &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; based on if it is above or below &lt;code class=&quot;highlighter-rouge&quot;&gt;0.5&lt;/code&gt;:&lt;/p&gt;
 
