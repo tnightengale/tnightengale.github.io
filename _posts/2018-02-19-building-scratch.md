@@ -46,7 +46,7 @@ plt.show()
 ```
 
 
-![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_5_0.png}}/assets/output_5_0.png)
+![Fig 1]({{https://github.com/tnightengale/tnightengale.github.io/blob/master/assets/output_5_0.png}}/assets/2018-02-19/output_5_0.png)
 
 
 We can see explicitly that the data points in the center of the cluster are labeled `1`, whereas those drawn from the encompassing fringe distribution are labled `0`:

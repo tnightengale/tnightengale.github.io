@@ -128,7 +128,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="/assets/output_5_0.png" alt="Fig 1" /></p>
+<p><img src="/assets/2018-02-19/output_5_0.png" alt="Fig 1" /></p>
 
 <p>We can see explicitly that the data points in the center of the cluster are labeled <code class="highlighter-rouge">1</code>, whereas those drawn from the encompassing fringe distribution are labled <code class="highlighter-rouge">0</code>:</p>
 
@@ -140,12 +140,13 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_ones</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data_ones</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s">'gold'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'x2'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="/assets/output_8_0.png" alt="Fig 1" /></p>
+<p><img src="/assets/output_8_0.png" alt="Fig 2" /></p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data_zeros</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="s">'purple'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x1'</span><span class="p">,</span><span class="n">fontsize</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
@@ -154,7 +155,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><img src="/assets/output_9_0.png" alt="Fig 1" /></p>
+<p><img src="/assets/output_9_0.png" alt="Fig 3" /></p>
 
 <p>Traditional linear classifiers like LDA and logistic regression struggle with irregular data patterns such as these but simple neural networks are relatively good at these types of classifaction. Let’s get started building our network.</p>
 
@@ -414,7 +415,7 @@ calculate $A^{[l]} = g(Z^{[l]})$ <br /></p>
 \frac{\partial\mathcal{L}}{\partial\mathbf{b}^{[l]}}  = \frac{\partial\mathcal{L}}{\partial\mathbf{Z}^{[l]}}
 \cdot\frac{\partial\mathbf{Z}^{[l]}}{\partial\mathbf{b}^{[l]}}</script>
 
-<p>Let’s define our backward propagation function:</p>
+<p>Calculating these partials can be pretty tricky; in a future post I will show how I derived the derrivative equations used in the backward propagation algorithm below:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">backward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z_dict</span><span class="p">,</span><span class="n">A_dict</span><span class="p">):</span>
     <span class="s">'''
@@ -503,7 +504,7 @@ update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\
     
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">init_parameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">layer_list</span><span class="p">)</span>
     
-    <span class="n">cost</span> <span class="o">=</span> <span class="mi">10</span> <span class="c"># set arbitrary cost &lt; 10</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># set arbitrary cost =&lt; 1</span>
     
     <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">iterations</span><span class="p">):</span>
         
@@ -514,6 +515,9 @@ update $\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - learningrate \cdot \frac{\partial\
         <span class="n">dParam_dict</span> <span class="o">=</span> <span class="n">backward_pass</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z_dict</span><span class="p">,</span><span class="n">A_dict</span><span class="p">)</span>
         
         <span class="n">parameters</span> <span class="o">=</span> <span class="n">update_values</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">dParam_dict</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
             
         <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">):</span>
             <span class="k">print</span><span class="p">(</span><span class="s">'Iteration {}. Old cost is {}. Cost is {}.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="n">old_cost</span><span class="p">,</span><span class="n">cost</span><span class="p">))</span>
@@ -549,10 +553,13 @@ The y_test_set has dimensions (1, 200).
 <p>Let’s now train our model using our <code class="highlighter-rouge">training_layers</code> and <code class="highlighter-rouge">training_set</code>:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">training_y</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">10001</span><span class="p">)</span>
+<span class="n">predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">y_training_set</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">10001</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 1. Cost is 0.7915907142286972.
+Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
+Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 Iteration 2000. Old cost is 0.22881880114984401. Cost is 0.2288287806352107.
 Iteration 3000. Old cost is 0.22662889790263158. Cost is 0.22663308811353614.
 Iteration 4000. Old cost is 0.22398200275732244. Cost is 0.2239717800972103.
@@ -564,13 +571,16 @@ Iteration 9000. Old cost is 0.22014454571887399. Cost is 0.22056276316549212.
 Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 </code></pre></div></div>
 
-<p>We can see that even after <code class="highlighter-rouge">Iteration 500</code> the cost function has declined to <code class="highlighter-rouge">0.2367...</code>. After this point the marginal decline in the cost function from each iteration is reduced. We should be cautious about continuing with more iterations after this point as our parameters $\mathbf{W}$ and $\mathbf{b}$ may be overfitted to our <code class="highlighter-rouge">training set</code>. Let’s also generate a set of parameters based on fewer iterations and then we will be able to compare which set of parameters better predict our test set. This will indicate if perhaps our first set of parameters based on 10000 iterations was somewhat overfit to our training data.</p>
+<p>We can see that even after <code class="highlighter-rouge">Iteration 1000</code> the cost function has declined to <code class="highlighter-rouge">0.2314...</code>. After this point the marginal decline in the cost function from each iteration is reduced. We should be cautious about continuing with more iterations after this point as our parameters $\mathbf{W}$ and $\mathbf{b}$ may be overfitted to our <code class="highlighter-rouge">training set</code>. Let’s also generate a set of parameters based on fewer iterations and then we will be able to compare which set of parameters better predict our test set. This will indicate if perhaps our first set of parameters based on 10000 iterations was somewhat overfit to our training data.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">early_stop_predict_parameters</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">training_layers</span><span class="p">,</span><span class="n">training_set</span><span class="p">,</span><span class="n">y_training_set</span><span class="p">,</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="mi">1001</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1. Old cost is 1. Cost is 0.7915907142286972.
+Iteration 2. Old cost is 0.7915907142286972. Cost is 0.7287529925292927.
+Iteration 3. Old cost is 0.7287529925292927. Cost is 0.6985418397541265.
+Iteration 1000. Old cost is 0.2314235697387047. Cost is 0.2314120460386395.
 </code></pre></div></div>
 
 <h2 id="4-predicting-the-test-set">4. Predicting the Test Set</h2>
@@ -621,7 +631,18 @@ Iteration 10000. Old cost is 0.21973503835360483. Cost is 0.2202900280690912.
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The early stop model has a cost value of 0.25496517602411756 and an accuracy ratio of 0.875.
 </code></pre></div></div>
 
-<p>We can see that our early stop parameters yielded a lower cost function value when applied to our holdout test data, but since we are classifying our continuous prediction outputs as either <code class="highlighter-rouge">0</code> or <code class="highlighter-rouge">1</code> it makes little difference as both sets of parameters yield the same model accuracy. It does suggest that for this dataset and this type of model, the accuracy is essentially capped at 87.5%. Any further training iterations would likely overfit the model to the training data.</p>
+<p>We can see that our early stop parameters yielded a lower cost function value when applied to our holdout test data, but since we are classifying our continuous prediction outputs as either <code class="highlighter-rouge">0</code> or <code class="highlighter-rouge">1</code> it makes little difference as both sets of parameters yield the same model accuracy. Any further training iterations would likely overfit the model to the training data. Variables such as the number of layer and nodes, the <code class="highlighter-rouge">learning_rate</code>, and the number of iterations are referred to as <em>hyperparameters</em>. Our result suggests that for this dataset and these hyperparameters, the accuracy is essentially capped at 87.5%. However it’s certainly possible to tune hyperparameters to yield better predictive models. In a future post I will delve into how we can systematically optimize these hyperparameters.</p>
+
+<h2 id="5-conclusion">5. Conclusion</h2>
+
+<p>Let’s recap what we learned:</p>
+<ol>
+  <li>A deep neural network can be a good tool to predict labels in non-linear data.</li>
+  <li>The network uses the forward and backward propagation algorithms to adjust the weight matrices and bias vectors at each layer of the network.</li>
+  <li>As the weights and biases are tuned, the cost function approaches a minimum.</li>
+  <li>If the model is trained on a given set of data for too many iterations, it can become very good at predicting the labels of the data it was trained on, to the detriment of predicting other samples of holdout or test data. This issue is called <em>overfitting</em>.</li>
+  <li>An <em>early stop</em> of fewer iterations might yield a model with better predictive accuracy for other holdout or test data.</li>
+</ol>
 
 <p>Thanks for reading!</p>
 
