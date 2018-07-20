@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-07-20T17:25:39-04:00</updated><id>http://localhost:4000/</id><title type="html">Teghan Nightengale</title><subtitle>A personal blog dedicated to better understanding the world through data.</subtitle><entry><title type="html">Taiwanese Credit Analysis with Tensorflow</title><link href="http://localhost:4000/taiwanese-credit/" rel="alternate" type="text/html" title="Taiwanese Credit Analysis with Tensorflow" /><published>2018-06-21T00:00:00-04:00</published><updated>2018-06-21T00:00:00-04:00</updated><id>http://localhost:4000/credit_default</id><content type="html" xml:base="http://localhost:4000/taiwanese-credit/">&lt;h1 id=&quot;taiwanese-credit-default-analysis&quot;&gt;Taiwanese Credit Default Analysis&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-07-20T17:42:41-04:00</updated><id>http://localhost:4000/</id><title type="html">Teghan Nightengale</title><subtitle>A personal blog dedicated to better understanding the world through data.</subtitle><entry><title type="html">Taiwanese Credit Analysis with Tensorflow</title><link href="http://localhost:4000/taiwanese-credit/" rel="alternate" type="text/html" title="Taiwanese Credit Analysis with Tensorflow" /><published>2018-06-21T00:00:00-04:00</published><updated>2018-06-21T00:00:00-04:00</updated><id>http://localhost:4000/credit_default</id><content type="html" xml:base="http://localhost:4000/taiwanese-credit/">&lt;h1 id=&quot;taiwanese-credit-default-analysis&quot;&gt;Taiwanese Credit Default Analysis&lt;/h1&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
 &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
@@ -10,12 +10,12 @@
 
 &lt;h2 id=&quot;data-import-and-cleaning&quot;&gt;Data Import and Cleaning&lt;/h2&gt;
 
-&lt;p&gt;This notebook uses a Tiawanese credit card dataset provided by the University of California Irvine. Let’s begin by importing our data downloaded at &lt;code class=&quot;highlighter-rouge&quot;&gt;https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This notebook uses a Taiwanese credit card dataset provided by the University of California Irvine. Let’s begin by importing our data downloaded at &lt;code class=&quot;highlighter-rouge&quot;&gt;https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv&lt;/code&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df_credit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/UCI_Credit_Card.csv'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Let’s use pandas to checkout the data and beging the process of cleaning it. We’ll start by examining the top entries of the dataset, as well as the documentation for the included features.&lt;/p&gt;
+&lt;p&gt;Let’s use pandas to checkout the data and begin the process of cleaning it. We’ll start by examining the top entries of the dataset, as well as the documentation for the included features.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df_credit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -618,15 +618,15 @@ Name: MARRIAGE, dtype: int64
 Name: PAY_0, dtype: int64
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;These features seem somewhat ambiguous. It’s unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it’s publically available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.&lt;/p&gt;
+&lt;p&gt;These features seem somewhat ambiguous. It’s unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it’s publicly available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.&lt;/p&gt;
 
 &lt;p&gt;Unfortunately this is the data we have to work with. Let’s see what type of predictive accuracy we are able to coax out of it: we’re ready to start predicting credit default using these features.&lt;/p&gt;
 
 &lt;h2 id=&quot;building-the-model&quot;&gt;Building the Model&lt;/h2&gt;
 
-&lt;p&gt;Attempt to build a simple 3 layer classification fully-connected model.&lt;/p&gt;
+&lt;p&gt;We’ll attempt to build a simple 3 layer classification fully-connected neural network.&lt;/p&gt;
 
-&lt;p&gt;Let’s first save our edited dataframe as a csv. Then reload it using &lt;code class=&quot;highlighter-rouge&quot;&gt;tflearn&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s first save our edited data-frame as a csv. Then reload it using &lt;code class=&quot;highlighter-rouge&quot;&gt;tflearn&lt;/code&gt;.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_default_graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -907,19 +907,19 @@ Training Step: 18520  | total loss: [1m[32m4.90281[0m[0m | time: 4.601s
 
 &lt;p&gt;Looks like the relu activations impart a higher training accuracy. Let’s build out a deeper network, whilst still using our dropout mechanism to reduce overfitting. We will also adjust our cost function to better suit the nature of the credit default problem.&lt;/p&gt;
 
-&lt;p&gt;What would be more costly to a credit firm: classifying a paying customer as defaulting (false postive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm’s cashflows. Therefore, the firm will likely inccur more costs by classifying a defaulting customer as paying.&lt;/p&gt;
+&lt;p&gt;What would be more costly to a credit firm: classifying a paying customer as defaulting (false positive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm’s cashflows. Therefore, the firm will likely incur more costs by classifying a defaulting customer as paying.&lt;/p&gt;
 
-&lt;p&gt;To account for this, let’s implement a weighted loss function, that disporportionately penalizes false negative results.&lt;/p&gt;
+&lt;p&gt;To account for this, let’s implement a weighted loss function, that disproportionately penalizes false negative results.&lt;/p&gt;
 
 &lt;p&gt;defaulting is cancer. test says no cancer. patient has cancer. =&amp;gt; test says no default. person defaults. =&amp;gt; false negative&lt;/p&gt;
 
-&lt;p&gt;Our weighted crossentropy function is as follows:&lt;/p&gt;
+&lt;p&gt;Our weighted cross-entropy function is as follows:&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{Loss} = -\frac{1}{m} \sum\limits_{i = 1}^{m} \bigg(\mathcal{W}\cdot(y^{(i)}\log\left(\sigma(\hat{y}^{i})\right) + (1-y^{(i)})\log\left(1- \sigma(\hat{y}^{i}\right)\bigg)&lt;/script&gt;
 
 &lt;p&gt;where $\sigma(\hat{y})$ is the sigmoid/logistic function and $\mathcal{W}$ is the relative weighting between positive and negative errors.&lt;/p&gt;
 
-&lt;p&gt;Recall that we are trying to predict which customers will default. Default is indicated in our dataset using &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; whereas customers in good financial standing are labelled &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;. Therefore we want $\mathcal{W} &amp;gt; 1$ porportional to the relatively higher cost of not predicting a defaulting customer.&lt;/p&gt;
+&lt;p&gt;Recall that we are trying to predict which customers will default. Default is indicated in our dataset using &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; whereas customers in good financial standing are labelled &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;. Therefore we want $\mathcal{W} &amp;gt; 1$ proportional to the relatively higher cost of not predicting a defaulting customer.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_default_graph&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -954,7 +954,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
 
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;Our model acheives a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.&lt;/p&gt;
+&lt;p&gt;Our model achieved a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.&lt;/p&gt;
 
 &lt;p&gt;The take-aways of this notebook are:&lt;/p&gt;
 &lt;ul&gt;
@@ -963,7 +963,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
   &lt;li&gt;approaching problems critically is essential to obtain reasonable solutions&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;In our case the cost of failing to detect a defauting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.&lt;/p&gt;</content><author><name></name></author><summary type="html">Taiwanese Credit Default Analysis</summary></entry><entry><title type="html">Using Global Satellite Data to Predict Consumption in Ghana</title><link href="http://localhost:4000/satellite-ghana/" rel="alternate" type="text/html" title="Using Global Satellite Data to Predict Consumption in Ghana" /><published>2018-05-21T00:00:00-04:00</published><updated>2018-05-21T00:00:00-04:00</updated><id>http://localhost:4000/Kiva-Loans</id><content type="html" xml:base="http://localhost:4000/satellite-ghana/">&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+&lt;p&gt;In our case the cost of failing to detect a defaulting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.&lt;/p&gt;</content><author><name></name></author><summary type="html">Taiwanese Credit Default Analysis</summary></entry><entry><title type="html">Using Global Satellite Data to Predict Consumption in Ghana</title><link href="http://localhost:4000/satellite-ghana/" rel="alternate" type="text/html" title="Using Global Satellite Data to Predict Consumption in Ghana" /><published>2018-05-21T00:00:00-04:00</published><updated>2018-05-21T00:00:00-04:00</updated><id>http://localhost:4000/Kiva-Loans</id><content type="html" xml:base="http://localhost:4000/satellite-ghana/">&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 rm(list=ls())
 list.of.packages = c('knitr','broom','boot','ggplot2','magrittr','kableExtra','papeR','stargazer')
 new.packages = list.of.packages[!(list.of.packages %in% installed.packages()[,&quot;Package&quot;])]

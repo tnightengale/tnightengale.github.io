@@ -18,14 +18,14 @@ import tensorflow as tf
 
 ## Data Import and Cleaning
 
-This notebook uses a Tiawanese credit card dataset provided by the University of California Irvine. Let's begin by importing our data downloaded at `https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv`.
+This notebook uses a Taiwanese credit card dataset provided by the University of California Irvine. Let's begin by importing our data downloaded at `https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv`.
 
 
 ```python
 df_credit = pd.read_csv('/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/UCI_Credit_Card.csv')
 ```
 
-Let's use pandas to checkout the data and beging the process of cleaning it. We'll start by examining the top entries of the dataset, as well as the documentation for the included features.
+Let's use pandas to checkout the data and begin the process of cleaning it. We'll start by examining the top entries of the dataset, as well as the documentation for the included features.
 
 
 ```python
@@ -664,15 +664,15 @@ df_credit['PAY_0'].value_counts()
 
 
 
-These features seem somewhat ambiguous. It's unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it's publically available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.
+These features seem somewhat ambiguous. It's unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it's publicly available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.
 
 Unfortunately this is the data we have to work with. Let's see what type of predictive accuracy we are able to coax out of it: we're ready to start predicting credit default using these features.
 
 ## Building the Model
 
-Attempt to build a simple 3 layer classification fully-connected model.
+We'll attempt to build a simple 3 layer classification fully-connected neural network.
 
-Let's first save our edited dataframe as a csv. Then reload it using `tflearn`.
+Let's first save our edited data-frame as a csv. Then reload it using `tflearn`.
 
 
 ```python
@@ -980,13 +980,13 @@ model.fit(data, target, n_epoch=10, batch_size=16, show_metric=True)
 
 Looks like the relu activations impart a higher training accuracy. Let's build out a deeper network, whilst still using our dropout mechanism to reduce overfitting. We will also adjust our cost function to better suit the nature of the credit default problem.
 
-What would be more costly to a credit firm: classifying a paying customer as defaulting (false postive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm's cashflows. Therefore, the firm will likely inccur more costs by classifying a defaulting customer as paying.
+What would be more costly to a credit firm: classifying a paying customer as defaulting (false positive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm's cashflows. Therefore, the firm will likely incur more costs by classifying a defaulting customer as paying.
 
-To account for this, let's implement a weighted loss function, that disporportionately penalizes false negative results.
+To account for this, let's implement a weighted loss function, that disproportionately penalizes false negative results.
 
 defaulting is cancer. test says no cancer. patient has cancer. => test says no default. person defaults. => false negative
 
-Our weighted crossentropy function is as follows:
+Our weighted cross-entropy function is as follows:
 
 $$
 \mathcal{Loss} = -\frac{1}{m} \sum\limits_{i = 1}^{m} \bigg(\mathcal{W}\cdot(y^{(i)}\log\left(\sigma(\hat{y}^{i})\right) + (1-y^{(i)})\log\left(1- \sigma(\hat{y}^{i}\right)\bigg)
@@ -994,7 +994,7 @@ $$
 
 where $\sigma(\hat{y})$ is the sigmoid/logistic function and $\mathcal{W}$ is the relative weighting between positive and negative errors.
 
-Recall that we are trying to predict which customers will default. Default is indicated in our dataset using `1` whereas customers in good financial standing are labelled `0`. Therefore we want $\mathcal{W} > 1$ porportional to the relatively higher cost of not predicting a defaulting customer.
+Recall that we are trying to predict which customers will default. Default is indicated in our dataset using `1` whereas customers in good financial standing are labelled `0`. Therefore we want $\mathcal{W} > 1$ proportional to the relatively higher cost of not predicting a defaulting customer.
 
 
 ```python
@@ -1033,11 +1033,11 @@ model.fit(data, target, n_epoch=10, batch_size=16, show_metric=True, validation_
 
 ## Conclusion
 
-Our model acheives a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.
+Our model achieved a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.
 
 The take-aways of this notebook are:
 - pandas can be used as a preliminary cleaning tool
 - tflearn is a great library for trying out different neural network configurations quickly
 - approaching problems critically is essential to obtain reasonable solutions
 
-In our case the cost of failing to detect a defauting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.
+In our case the cost of failing to detect a defaulting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.

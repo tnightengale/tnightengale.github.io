@@ -102,12 +102,12 @@
 
 <h2 id="data-import-and-cleaning">Data Import and Cleaning</h2>
 
-<p>This notebook uses a Tiawanese credit card dataset provided by the University of California Irvine. Let’s begin by importing our data downloaded at <code class="highlighter-rouge">https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv</code>.</p>
+<p>This notebook uses a Taiwanese credit card dataset provided by the University of California Irvine. Let’s begin by importing our data downloaded at <code class="highlighter-rouge">https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv</code>.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/UCI_Credit_Card.csv'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>Let’s use pandas to checkout the data and beging the process of cleaning it. We’ll start by examining the top entries of the dataset, as well as the documentation for the included features.</p>
+<p>Let’s use pandas to checkout the data and begin the process of cleaning it. We’ll start by examining the top entries of the dataset, as well as the documentation for the included features.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </code></pre></div></div>
@@ -710,15 +710,15 @@ Name: MARRIAGE, dtype: int64
 Name: PAY_0, dtype: int64
 </code></pre></div></div>
 
-<p>These features seem somewhat ambiguous. It’s unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it’s publically available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.</p>
+<p>These features seem somewhat ambiguous. It’s unclear how the categorical designations for the various payment columns work. The quality of this dataset is uncertain: it’s publicly available with little documentation. Credit data by nature is sensitive. Therefore quality credit data is usually confidentially held by firms.</p>
 
 <p>Unfortunately this is the data we have to work with. Let’s see what type of predictive accuracy we are able to coax out of it: we’re ready to start predicting credit default using these features.</p>
 
 <h2 id="building-the-model">Building the Model</h2>
 
-<p>Attempt to build a simple 3 layer classification fully-connected model.</p>
+<p>We’ll attempt to build a simple 3 layer classification fully-connected neural network.</p>
 
-<p>Let’s first save our edited dataframe as a csv. Then reload it using <code class="highlighter-rouge">tflearn</code>.</p>
+<p>Let’s first save our edited data-frame as a csv. Then reload it using <code class="highlighter-rouge">tflearn</code>.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
 </code></pre></div></div>
@@ -999,19 +999,19 @@ Training Step: 18520  | total loss: [1m[32m4.90281[0m[0m | time: 4.601s
 
 <p>Looks like the relu activations impart a higher training accuracy. Let’s build out a deeper network, whilst still using our dropout mechanism to reduce overfitting. We will also adjust our cost function to better suit the nature of the credit default problem.</p>
 
-<p>What would be more costly to a credit firm: classifying a paying customer as defaulting (false postive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm’s cashflows. Therefore, the firm will likely inccur more costs by classifying a defaulting customer as paying.</p>
+<p>What would be more costly to a credit firm: classifying a paying customer as defaulting (false positive) or classifying a defaulting customer as paying (false negative)? In the case of a false positive, the customers who will pay may receive a signal, a notice for example, indicating that they may be at risk for higher interest rates if they do not comply and pay their balance. This may annoy them slightly, but if they intend to pay their balance anyway, it will likely not be a significant issue. However, in the case of a false negative, the customers who will default will not receive any signal to alter their behaviour and their default will constrain the firm’s cashflows. Therefore, the firm will likely incur more costs by classifying a defaulting customer as paying.</p>
 
-<p>To account for this, let’s implement a weighted loss function, that disporportionately penalizes false negative results.</p>
+<p>To account for this, let’s implement a weighted loss function, that disproportionately penalizes false negative results.</p>
 
 <p>defaulting is cancer. test says no cancer. patient has cancer. =&gt; test says no default. person defaults. =&gt; false negative</p>
 
-<p>Our weighted crossentropy function is as follows:</p>
+<p>Our weighted cross-entropy function is as follows:</p>
 
 <script type="math/tex; mode=display">\mathcal{Loss} = -\frac{1}{m} \sum\limits_{i = 1}^{m} \bigg(\mathcal{W}\cdot(y^{(i)}\log\left(\sigma(\hat{y}^{i})\right) + (1-y^{(i)})\log\left(1- \sigma(\hat{y}^{i}\right)\bigg)</script>
 
 <p>where $\sigma(\hat{y})$ is the sigmoid/logistic function and $\mathcal{W}$ is the relative weighting between positive and negative errors.</p>
 
-<p>Recall that we are trying to predict which customers will default. Default is indicated in our dataset using <code class="highlighter-rouge">1</code> whereas customers in good financial standing are labelled <code class="highlighter-rouge">0</code>. Therefore we want $\mathcal{W} &gt; 1$ porportional to the relatively higher cost of not predicting a defaulting customer.</p>
+<p>Recall that we are trying to predict which customers will default. Default is indicated in our dataset using <code class="highlighter-rouge">1</code> whereas customers in good financial standing are labelled <code class="highlighter-rouge">0</code>. Therefore we want $\mathcal{W} &gt; 1$ proportional to the relatively higher cost of not predicting a defaulting customer.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
 </code></pre></div></div>
@@ -1046,7 +1046,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>Our model acheives a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.</p>
+<p>Our model achieved a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.</p>
 
 <p>The take-aways of this notebook are:</p>
 <ul>
@@ -1055,7 +1055,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
   <li>approaching problems critically is essential to obtain reasonable solutions</li>
 </ul>
 
-<p>In our case the cost of failing to detect a defauting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.</p>
+<p>In our case the cost of failing to detect a defaulting customer is likely higher than incorrectly labelling a paying customer. We applied a weighted loss function to account for this imbalance in the types of errors made by the model.</p>
 
   </div>
 
