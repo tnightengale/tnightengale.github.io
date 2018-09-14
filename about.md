@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-I am a Canadian undergraduate student studying statistical economics at Queen's University at Kingston.
+I am a recent economics graduate of Queen's University at Kingston with a passion for data.
 
 I hope to one day contribute to the development of general Artificial Intelligence.
 
