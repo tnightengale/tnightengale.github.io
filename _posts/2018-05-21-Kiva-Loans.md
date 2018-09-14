@@ -1308,8 +1308,6 @@ featues is limited to 94 districts.
 
 ### Analysis
 
-#### 
-
 To account for the small sample size of viable districts I utilize
 several simple MLS models with limited dependent variables to predict
 district level per captia income for 94 of Ghana’s districts. I build a
@@ -1336,8 +1334,6 @@ cross-validated mean squared error (CV-MSE) for several specifications.
     }
 
 #### Index Models
-
-##### 
 
 `Model 1` uses two indices from the Aid Data to attempt to predict
 average per-capita consumption expenditures by district. The first index
