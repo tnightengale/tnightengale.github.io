@@ -984,8 +984,6 @@ What would be more costly to a credit firm: classifying a paying customer as def
 
 To account for this, let's implement a weighted loss function, that disproportionately penalizes false negative results.
 
-defaulting is cancer. test says no cancer. patient has cancer. => test says no default. person defaults. => false negative
-
 Our weighted cross-entropy function is as follows:
 
 $$
@@ -1035,7 +1033,7 @@ model.fit(data, target, n_epoch=10, batch_size=16, show_metric=True, validation_
 
 Our model achieved a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.
 
-The take-aways of this notebook are:
+The takeaways of this notebook are:
 - pandas can be used as a preliminary cleaning tool
 - tflearn is a great library for trying out different neural network configurations quickly
 - approaching problems critically is essential to obtain reasonable solutions

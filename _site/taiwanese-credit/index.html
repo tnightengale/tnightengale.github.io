@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Begin Jekyll SEO tag v2.4.0 -->
 <title>Taiwanese Credit Analysis with Tensorflow | Teghan Nightengale</title>
-<meta name="generator" content="Jekyll v3.7.2" />
+<meta name="generator" content="Jekyll v3.7.4" />
 <meta property="og:title" content="Taiwanese Credit Analysis with Tensorflow" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Taiwanese Credit Default Analysis" />
@@ -18,7 +18,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-06-21T00:00:00-04:00" />
 <script type="application/ld+json">
-{"description":"Taiwanese Credit Default Analysis","@type":"BlogPosting","url":"http://localhost:4000/taiwanese-credit/","headline":"Taiwanese Credit Analysis with Tensorflow","dateModified":"2018-06-21T00:00:00-04:00","datePublished":"2018-06-21T00:00:00-04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/taiwanese-credit/"},"@context":"http://schema.org"}</script>
+{"datePublished":"2018-06-21T00:00:00-04:00","dateModified":"2018-06-21T00:00:00-04:00","url":"http://localhost:4000/taiwanese-credit/","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/taiwanese-credit/"},"description":"Taiwanese Credit Default Analysis","@type":"BlogPosting","headline":"Taiwanese Credit Analysis with Tensorflow","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
   <link rel="stylesheet" href="/assets/main.css">
@@ -104,12 +104,12 @@
 
 <p>This notebook uses a Taiwanese credit card dataset provided by the University of California Irvine. Let’s begin by importing our data downloaded at <code class="highlighter-rouge">https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset#UCI_Credit_Card.csv</code>.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/UCI_Credit_Card.csv'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/UCI_Credit_Card.csv'</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Let’s use pandas to checkout the data and begin the process of cleaning it. We’ll start by examining the top entries of the dataset, as well as the documentation for the included features.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
 </code></pre></div></div>
 
 <div>
@@ -311,17 +311,17 @@ default.payment.next.month: Default payment (1=yes, 0=no)</li>
 
 <p>The binary variables of <code class="highlighter-rouge">SEX</code> and <code class="highlighter-rouge">MARRIAGE</code> make more sense as dummy variables coded as <code class="highlighter-rouge">0</code> or <code class="highlighter-rouge">1</code> and renamed <code class="highlighter-rouge">MALE</code> and <code class="highlighter-rouge">MARRIED</code>. Let’s rename and reformat those variables. The intuition is that having a sparse vector for a column will likely speed up computation time for our neural network.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># rename and format `SEX` column</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">df_credit</span><span class="o">.</span><span class="n">SEX</span> <span class="o">==</span> <span class="mi">2</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># rename and format `SEX` column
+</span><span class="n">mask</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">.</span><span class="n">SEX</span> <span class="o">==</span> <span class="mi">2</span>
 <span class="n">column_name</span> <span class="o">=</span> <span class="s">'SEX'</span>
-<span class="n">df_credit</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">df_credit</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">df_credit</span><span class="o">.</span><span class="n">SEX</span> <span class="o">=</span> <span class="n">df_credit</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s">'SEX'</span><span class="p">:</span><span class="s">'MALE'</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">df_credit</span><span class="p">.</span><span class="n">SEX</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s">'SEX'</span><span class="p">:</span><span class="s">'MALE'</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Let’s make sure the labels for <code class="highlighter-rouge">MARRIAGE</code> make sense.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">MARRIAGE</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">.</span><span class="n">MARRIAGE</span><span class="p">.</span><span class="n">value_counts</span><span class="p">()</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2    15964
@@ -333,11 +333,11 @@ Name: MARRIAGE, dtype: int64
 
 <p>Clearly there are some missing values here, being coded as <code class="highlighter-rouge">3</code> and <code class="highlighter-rouge">0</code>. Let’s switch them to NaN and check the result.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">MARRIAGE</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">[</span><span class="s">'MARRIAGE'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">})</span>
-<span class="n">df_credit</span> <span class="o">=</span> <span class="n">df_credit</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">.</span><span class="n">MARRIAGE</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">[</span><span class="s">'MARRIAGE'</span><span class="p">].</span><span class="n">replace</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">})</span>
+<span class="n">df_credit</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">.</span><span class="n">dropna</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">MARRIAGE</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">.</span><span class="n">MARRIAGE</span><span class="p">.</span><span class="n">value_counts</span><span class="p">()</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2.0    15964
@@ -347,18 +347,18 @@ Name: MARRIAGE, dtype: int64
 
 <p>Let’s rename the <code class="highlighter-rouge">MARRIAGE</code> column.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># rename and format `MARRIAGE` column</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">df_credit</span><span class="o">.</span><span class="n">MARRIAGE</span> <span class="o">==</span> <span class="mi">2</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># rename and format `MARRIAGE` column
+</span><span class="n">mask</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">.</span><span class="n">MARRIAGE</span> <span class="o">==</span> <span class="mi">2</span>
 <span class="n">column_name</span> <span class="o">=</span> <span class="s">'MARRIAGE'</span>
-<span class="n">df_credit</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">df_credit</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="n">df_credit</span><span class="o">.</span><span class="n">MARRIAGE</span> <span class="o">=</span> <span class="n">df_credit</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s">'MARRIAGE'</span><span class="p">:</span><span class="s">'MARRIED'</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">df_credit</span><span class="p">.</span><span class="n">MARRIAGE</span> <span class="o">=</span> <span class="n">df_credit</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s">'MARRIAGE'</span><span class="p">:</span><span class="s">'MARRIED'</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <p>Let’s check out our reformatted labels and binary variables.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s">'display.max_columns'</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
-<span class="n">df_credit</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pd</span><span class="p">.</span><span class="n">set_option</span><span class="p">(</span><span class="s">'display.max_columns'</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">df_credit</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div>
@@ -693,7 +693,7 @@ Name: MARRIAGE, dtype: int64
 
 <p>Great. Now let’s check out the values for the <code class="highlighter-rouge">PAY_</code> features.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">[</span><span class="s">'PAY_0'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">[</span><span class="s">'PAY_0'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">()</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 0    14532
@@ -720,17 +720,17 @@ Name: PAY_0, dtype: int64
 
 <p>Let’s first save our edited data-frame as a csv. Then reload it using <code class="highlighter-rouge">tflearn</code>.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_credit</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># check that csv worked as intended</span>
-<span class="n">df_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># check that csv worked as intended
+</span><span class="n">df_check</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_check</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df_check</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
 </code></pre></div></div>
 
 <div>
@@ -931,16 +931,16 @@ Name: PAY_0, dtype: int64
 
 <p>We’re going to use the <code class="highlighter-rouge">tflearn</code> library to quickly experiment with a couple of fully-connected network configurations. <code class="highlighter-rouge">tflearn</code> is a high-level API for tensorflow, that allows us to quickly construct layers, choose a cost function, and interject various normalization transformations into our network.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">data_utils</span><span class="o">.</span><span class="n">load_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">,</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">data_utils</span><span class="p">.</span><span class="n">load_csv</span><span class="p">(</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud/cleaned_credit_data.csv'</span><span class="p">,</span>
                                           <span class="n">categorical_labels</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># preprocess the data </span>
-<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns_to_ignore</span><span class="p">):</span>
-    <span class="c"># Sort by descending id and delete columns</span>
-    <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">columns_to_ignore</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-        <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># preprocess the data 
+</span><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns_to_ignore</span><span class="p">):</span>
+    <span class="c1"># Sort by descending id and delete columns
+</span>    <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">columns_to_ignore</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="p">[</span><span class="n">r</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
 
 <span class="n">to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 
@@ -949,18 +949,18 @@ Name: PAY_0, dtype: int64
 
 <p>Below the layers of the network are built recursively, taking in the pervious layer as input at each new layer.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_credit</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">df_credit</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n_features</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_credit</span><span class="p">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">df_credit</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Define model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
-<span class="c"># Start training (apply gradient descent algorithm)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define model
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<span class="c1"># Start training (apply gradient descent algorithm)
+</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Training Step: 18519  | total loss: [1m[32m0.63909[0m[0m | time: 5.017s
@@ -972,22 +972,22 @@ Training Step: 18520  | total loss: [1m[32m0.61910[0m[0m | time: 5.019s
 
 <p>Hmmm our accuracy of 0.72 is pretty weak. Let’s implement a relu activation in our first two fully connected layers, as well as a dropout mechanism to prevent overfitting and compare our accuracy:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net_1</span> <span class="o">=</span> <span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
-<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net_1</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net_1</span> <span class="o">=</span> <span class="n">net</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
+<span class="n">net_1</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net_1</span><span class="p">)</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># new model with relu and dropout model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net_1</span><span class="p">)</span>
-<span class="c"># Start training (apply gradient descent algorithm)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># new model with relu and dropout model
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net_1</span><span class="p">)</span>
+<span class="c1"># Start training (apply gradient descent algorithm)
+</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Training Step: 18519  | total loss: [1m[32m5.28767[0m[0m | time: 4.598s
@@ -1003,8 +1003,6 @@ Training Step: 18520  | total loss: [1m[32m4.90281[0m[0m | time: 4.601s
 
 <p>To account for this, let’s implement a weighted loss function, that disproportionately penalizes false negative results.</p>
 
-<p>defaulting is cancer. test says no cancer. patient has cancer. =&gt; test says no default. person defaults. =&gt; false negative</p>
-
 <p>Our weighted cross-entropy function is as follows:</p>
 
 <script type="math/tex; mode=display">\mathcal{Loss} = -\frac{1}{m} \sum\limits_{i = 1}^{m} \bigg(\mathcal{W}\cdot(y^{(i)}\log\left(\sigma(\hat{y}^{i})\right) + (1-y^{(i)})\log\left(1- \sigma(\hat{y}^{i}\right)\bigg)</script>
@@ -1013,28 +1011,28 @@ Training Step: 18520  | total loss: [1m[32m4.90281[0m[0m | time: 4.601s
 
 <p>Recall that we are trying to predict which customers will default. Default is indicated in our dataset using <code class="highlighter-rouge">1</code> whereas customers in good financial standing are labelled <code class="highlighter-rouge">0</code>. Therefore we want $\mathcal{W} &gt; 1$ proportional to the relatively higher cost of not predicting a defaulting customer.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tf</span><span class="p">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
-<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span><span class="n">loss</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">weighted_crossentropy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">target</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
-<span class="c"># model 2 with relu and dropout model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="o">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="n">best_val_accuracy</span><span class="o">=.</span><span class="mi">8</span><span class="p">,</span> <span class="n">best_checkpoint_path</span><span class="o">=</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud'</span><span class="p">)</span>
-<span class="c"># Start training (apply gradient descent algorithm)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">validation_set</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">snapshot_epoch</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">input_data</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_features</span><span class="p">])</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">)</span>
+<span class="n">net_2</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">regression</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span><span class="n">loss</span><span class="o">=</span><span class="k">lambda</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">weighted_crossentropy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">target</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<span class="c1"># model 2 with relu and dropout model
+</span><span class="n">model</span> <span class="o">=</span> <span class="n">tflearn</span><span class="p">.</span><span class="n">DNN</span><span class="p">(</span><span class="n">net_2</span><span class="p">,</span> <span class="n">best_val_accuracy</span><span class="o">=</span><span class="p">.</span><span class="mi">8</span><span class="p">,</span> <span class="n">best_checkpoint_path</span><span class="o">=</span><span class="s">'/Users/tnightengale/Desktop/Kaggle/Credit_Fraud'</span><span class="p">)</span>
+<span class="c1"># Start training (apply gradient descent algorithm)
+</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">n_epoch</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">show_metric</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">validation_set</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">snapshot_epoch</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div></div>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Training Step: 16669  | total loss: [1m[32m0.97229[0m[0m | time: 7.524s
@@ -1048,7 +1046,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
 
 <p>Our model achieved a training accuracy of 0.83 and a test accuracy of approximately 0.77. While this is obviously better than simply guessing defaulting customers, this is insufficient to the current needs of modern firms concerned with credit default.</p>
 
-<p>The take-aways of this notebook are:</p>
+<p>The takeaways of this notebook are:</p>
 <ul>
   <li>pandas can be used as a preliminary cleaning tool</li>
   <li>tflearn is a great library for trying out different neural network configurations quickly</li>
@@ -1083,7 +1081,7 @@ Training Step: 16670  | total loss: [1m[32m0.96221[0m[0m | time: 8.694s
             
             </li>
             
-            <li><a class="u-email" href="mailto:tnightengale.blog@gmail.com">tnightengale.blog@gmail.com</a></li>
+            <li><a class="u-email" href="mailto:t.nightengale@queensu.ca">t.nightengale@queensu.ca</a></li>
             
         </ul>
       </div>
